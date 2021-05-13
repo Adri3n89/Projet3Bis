@@ -18,10 +18,18 @@ class Game {
     let player1: Player
     let player2: Player
     let randomChest = RandomChest()
+    var currentCharacter: Character?
+    var currentPlayer: Player
+    var currentAction: String = ""
     
     init(player1: Player, player2: Player) {
         self.player1 = player1
         self.player2 = player2
+        self.currentPlayer = player1
+    }
+    
+    func start() {
+        
     }
     
     // set the game on isOver and a winner
