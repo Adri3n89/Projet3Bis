@@ -14,11 +14,14 @@ class Setup {
     
     func setupGame() {
         createPlayer(player: player1)
-        while player1.characters.count != 3 {
+        while player1.characters.count <= 2 {
             createCharacter(player: player1)
         }
+        isPlayer2 = true
         createPlayer(player: player2)
-        createCharacter(player: player2)
+        while player2.characters.count <= 2 {
+            createCharacter(player: player2)
+        }
     }
     
     private func createPlayer(player: Player) {
@@ -33,7 +36,6 @@ class Setup {
             createPlayer(player: player)
         } else {
             player.name = name!
-            isPlayer2 = true
             if isPlayer2 {
                 if player2.name.capitalized == player1.name.capitalized {
                     print("You can't choose the same name that Player 1")
@@ -53,7 +55,7 @@ class Setup {
         }
         chooseName(player: player)
     }
-    
+
     private func chooseName(player: Player) {
         if let name = readLine(), !name.isEmpty {
             var sameName = 0
@@ -62,7 +64,20 @@ class Setup {
                 chooseName(player: player)
             }
             if player.characters.count == 0 {
-                chooseRace(name: name, player: player)
+                if !isPlayer2 {
+                    chooseRace(name: name, player: player)
+                } else {
+                    for index in 0...player1.characters.count-1 where name.capitalized == player1.characters[index].name.capitalized {
+                        sameName += 1
+                    }
+                    if sameName > 0 {
+                        print("Your Character can't have the same name of a Player 1 character")
+                        sameName = 0
+                        chooseName(player: player)
+                    } else {
+                        chooseRace(name: name, player: player)
+                    }
+                }
             } else {
                 for index in 0...player.characters.count-1 where name.capitalized == player.characters[index].name.capitalized {
                     sameName += 1
@@ -72,7 +87,20 @@ class Setup {
                     sameName = 0
                     chooseName(player: player)
                 } else {
-                    chooseRace(name: name, player: player)
+                    if isPlayer2 {
+                        for index in 0...player1.characters.count-1 where name.capitalized == player1.characters[index].name.capitalized {
+                            sameName += 1
+                        }
+                        if sameName > 0 {
+                            print("Your Character can't have the same name of a Player 1 character")
+                            sameName = 0
+                            chooseName(player: player)
+                        } else {
+                            chooseRace(name: name, player: player)
+                        }
+                    } else {
+                        chooseRace(name: name, player: player)
+                    }
                 }
             }
         } else {

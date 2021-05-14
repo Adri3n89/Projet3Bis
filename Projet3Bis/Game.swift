@@ -29,7 +29,15 @@ class Game {
     }
     
     func start() {
-        
+        for character in player1.characters {
+            print(character.name)
+            print(character.race)
+        }
+        for character in player2.characters {
+            print(character.name)
+            print(character.race)
+        }
+        print("let's Fight !")
     }
     
     // set the game on isOver and a winner

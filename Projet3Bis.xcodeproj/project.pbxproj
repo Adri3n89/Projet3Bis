@@ -72,13 +72,13 @@
 			isa = PBXGroup;
 			children = (
 				7A21D2FC264D25C1008D4B23 /* main.swift */,
+				7A21D30D264D26F3008D4B23 /* Setup.swift */,
 				7A21D303264D25F2008D4B23 /* Game.swift */,
 				7A21D305264D2602008D4B23 /* Player.swift */,
-				7A21D30D264D26F3008D4B23 /* Setup.swift */,
 				7A21D307264D2610008D4B23 /* Character.swift */,
-				7A21D30F264D27B6008D4B23 /* RandomChest.swift */,
 				7A21D311264D284B008D4B23 /* Race.swift */,
 				7A21D309264D2621008D4B23 /* Weapon.swift */,
+				7A21D30F264D27B6008D4B23 /* RandomChest.swift */,
 			);
 			path = Projet3Bis;
 			sourceTree = "<group>";
