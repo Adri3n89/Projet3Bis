@@ -14,7 +14,9 @@ class Setup {
     
     func setupGame() {
         createPlayer(player: player1)
-        createCharacter(player: player1)
+        while player1.characters.count != 3 {
+            createCharacter(player: player1)
+        }
         createPlayer(player: player2)
         createCharacter(player: player2)
     }
@@ -60,7 +62,7 @@ class Setup {
                 chooseName(player: player)
             }
             if player.characters.count == 0 {
-                    chooseRace(name: name)
+                chooseRace(name: name, player: player)
             } else {
                 for index in 0...player.characters.count-1 where name.capitalized == player.characters[index].name.capitalized {
                     sameName += 1
@@ -70,15 +72,44 @@ class Setup {
                     sameName = 0
                     chooseName(player: player)
                 } else {
-                    chooseRace(name: name)
+                    chooseRace(name: name, player: player)
                 }
             }
+        } else {
+            print("Your Character must have a name, please choose one")
+            chooseName(player: player)
         }
     }
         
-    private func chooseRace(name: String) {
-            print("Choose a Race for \(name)")
+    private func chooseRace(name: String, player: Player) {
+        let race: Race
+        print("Choose a Race for your Character")
+        print("""
+            1 - Elf
+            2 - Human
+            3 - Wizzard
+            4 - Dwarf
+            """)
+        if let raceChoice = readLine(), !raceChoice.isEmpty {
+            switch raceChoice {
+                case "1" :
+                    race = Elf()
+                    player.characters.append(Character(name: name, race: race))
+                case "2" :
+                    race = Human()
+                    player.characters.append(Character(name: name, race: race))
+                case "3" :
+                    race = Wizzard()
+                    player.characters.append(Character(name: name, race: race))
+                case "4" :
+                    race = Dwarf()
+                    player.characters.append(Character(name: name, race: race))
+                default : chooseRace(name: name, player: player)
+            }
+        } else {
+            chooseRace(name: name, player: player)
         }
+    }
 
 
 }
