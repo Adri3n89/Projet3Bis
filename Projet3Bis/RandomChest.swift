@@ -26,6 +26,7 @@ class RandomChest {
         case .wizzard : randomWeapon = arrayStick[randomNumber]
         }
         currentC.race.weapon = randomWeapon
+            print("A treasure Chest appear with a \(randomWeapon.name) in it\nWith \(randomWeapon.damage) damage and \(randomWeapon.heal) heal")
         }
     }
 }

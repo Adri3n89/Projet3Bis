@@ -40,6 +40,12 @@ class Game {
         }
     
     func stats() {
+        if let winner = game.winner {
+            print("\(winner.name) Win the Fight in \(game.totalTurn) turns !")
+            for player in winner.characters {
+                print("\(player.name) have \(player.race.health) PV left.")
+            }
+        }
         
     }
     
@@ -74,14 +80,35 @@ class Game {
         print("\(player.name) choose a character who can play")
         for index in index1...index2 {
             if characterArray[index].race.health > 0 && characterArray[index].canPlay == true {
-                print("\(index+1) - \(characterArray[index].name)")
+                if player.name == player1.name {
+                    print("\(index+1) - \(characterArray[index].name)")
+                } else {
+                    print("\(index-2) - \(characterArray[index].name)")
+                }
+                
             }
         }
         if let choice = readLine(), !choice.isEmpty {
             switch choice {
-                case "1" : currentC = player.characters[0]
-                case "2" : currentC = player.characters[1]
-                case "3" : currentC = player.characters[2]
+                case "1" :
+                    if player.characters[0].canPlay {
+                        currentC = player.characters[0]
+                    } else {
+                        chooseCurrentCharacter(player: player, index1: index1, index2: index2)
+                    }
+                    
+                case "2" :
+                    if player.characters[1].canPlay {
+                        currentC = player.characters[1]
+                    } else {
+                        chooseCurrentCharacter(player: player, index1: index1, index2: index2)
+                    }
+                case "3" :
+                    if player.characters[2].canPlay {
+                        currentC = player.characters[2]
+                    } else {
+                        chooseCurrentCharacter(player: player, index1: index1, index2: index2)
+                    }
                 default : chooseCurrentCharacter(player: player, index1: index1, index2: index2)
             }
         } else {
@@ -97,8 +124,11 @@ class Game {
         }
         if let choice = readLine(), !choice.isEmpty {
             switch choice {
-                case "1" : chooseTargetToAttack()
+                case "1" :
+                    currentAction = "Attack"
+                    chooseTargetToAttack()
                 case "2" : if currentC!.race.weapon.heal > 0 {
+                    currentAction = "Heal"
                     chooseTargetToHeal()
                 } else {
                     chooseAttackOrHeal()
@@ -110,11 +140,98 @@ class Game {
     }
     
     func chooseTargetToAttack() {
-        print("ATTACK")
+        print("Choose a target to attack")
+        if currentP.name == player1.name {
+            for index in 3...5 where characterArray[index].race.health > 0 {
+                print("\(index-2) - \(characterArray[index].name) : \(characterArray[index].race.health) PV")
+            }
+            if let choice = readLine(), !choice.isEmpty {
+                switch choice {
+                    case "1" :
+                        if player2.characters[0].race.health > 0 {
+                            currentTarget = player2.characters[0]
+                            
+                        } else {
+                            chooseTargetToAttack()
+                        }
+                    case "2" :
+                        if player2.characters[1].race.health > 0 {
+                            currentTarget = player2.characters[1]
+                        } else {
+                            chooseTargetToAttack()
+                        }
+                    case "3" :
+                        if player2.characters[2].race.health > 0 {
+                            currentTarget = player2.characters[2]
+                        } else {
+                            chooseTargetToAttack()
+                        }
+                    default: chooseTargetToAttack()
+                }
+            } else {
+                chooseTargetToAttack()
+            }
+        } else {
+            for index in 0...2 where characterArray[index].race.health > 0 {
+                print("\(index+1) - \(characterArray[index].name) : \(characterArray[index].race.health) PV")
+            }
+            if let choice = readLine(), !choice.isEmpty {
+                switch choice {
+                    case "1" :
+                        if player1.characters[0].race.health > 0 {
+                            currentTarget = player1.characters[0]
+                        } else {
+                            chooseTargetToAttack()
+                        }
+                    case "2" :
+                        if player1.characters[1].race.health > 0 {
+                            currentTarget = player1.characters[1]
+                        } else {
+                            chooseTargetToAttack()
+                        }
+                    case "3" :
+                        if player1.characters[2].race.health > 0 {
+                            currentTarget = player1.characters[2]
+                        } else {
+                            chooseTargetToAttack()
+                        }
+                    default: chooseTargetToAttack()
+                }
+            } else {
+                chooseTargetToAttack()
+            }
+        }
     }
     
     func chooseTargetToHeal() {
         print("HEAL")
+    }
+    
+    private func doAction() {
+        if let currentC = currentC {
+        randomChest.chestAppear(currentC: currentC)
+        }
+        if currentAction == "Attack" {
+            attack()
+        }
+        if currentAction == "Heal" {
+            heal()
+        }
+        characterIsDead(character: currentTarget!)
+        isGameOver()
+        if game.state == .isOver {
+            game.stats()
+        } else {
+            currentC!.canPlay = false
+            currentPIndex += 1
+            checkTurn()
+        if currentPArray.count == currentPIndex {
+            currentPIndex = 0
+        }
+        currentP = currentPArray[currentPIndex]
+        refresh(characterArray: characterArray)
+        turn()
+        }
     }
 
     private func turn() {
@@ -133,11 +250,9 @@ class Game {
             chooseCurrentCharacter(player: player2, index1: 3, index2: 5)
         } else if currentPIndex == 0 {
             chooseCurrentCharacter(player: player1, index1: 0, index2: 2)
-            chooseAttackOrHeal()
         }
-        if currentAction != "" && currentTarget != nil {
-            doAction()
-        }
+        chooseAttackOrHeal()
+        doAction()
     }
 
     // MARK: - PRIVATES FUNCTIONS
@@ -155,34 +270,6 @@ class Game {
         for index in 0...2 {
             characterIsDead(character: player1.characters[index])
             characterIsDead(character: player2.characters[index])
-        }
-    }
-
-    private func doAction() {
-        guard currentC != nil else { return }
-        randomChest.chestAppear(currentC: currentC!)
-        if currentAction == "attack" {
-            attack()
-        }
-        if currentAction == "heal" {
-            heal()
-        }
-        characterIsDead(character: currentTarget!)
-        isGameOver()
-        if game.state == .isOver {
-            game.stats()
-        } else {
-            currentC!.canPlay = false
-            currentPIndex += 1
-            checkTurn()
-            // change the index to go to the next character of the array
-            // if the last character played, go back to the first
-        if currentPArray.count == currentPIndex {
-            currentPIndex = 0
-        }
-        currentP = currentPArray[currentPIndex]
-        refresh(characterArray: characterArray)
-        turn()
         }
     }
 
