@@ -36,14 +36,19 @@ class Game {
     
     func start() {
         print("Get ready to Fight!")
+        print("Turn n°\(totalTurn)")
         turn()
         }
     
     func stats() {
-        if let winner = game.winner {
-            print("\(winner.name) Win the Fight in \(game.totalTurn) turns !")
-            for player in winner.characters {
-                print("\(player.name) have \(player.race.health) PV left.")
+        if let winner = winner {
+            print("\(winner.name) Win the Fight in \(totalTurn) turns !")
+            for character in winner.characters {
+                if character.race.health == 0 {
+                    print("\(character.name) the \(character.race.type) is dead")
+                } else {
+                    print("\(character.name) the \(character.race.type) have \(character.race.health) PV left.")
+                }
             }
         }
         
@@ -204,7 +209,74 @@ class Game {
     }
     
     func chooseTargetToHeal() {
-        print("HEAL")
+        var targetToHeal = 0
+        print("Choose a target to heal")
+        if currentP.name == player1.name {
+            for index in 0...2 where characterArray[index].race.health > 0 && characterArray[index].race.health < characterArray[index].race.healthMax {
+                targetToHeal += 1
+                print("\(index+1) - \(characterArray[index].name) : \(characterArray[index].race.health) / \(characterArray[index].race.healthMax) PV")
+            }
+            if targetToHeal == 0 {
+                print("no one to heal, go attack")
+                chooseAttackOrHeal()
+            } else {
+                if let choice = readLine(), !choice.isEmpty {
+                    switch choice {
+                        case "1" :
+                            if player1.characters[0].race.health > 0 && player1.characters[0].race.health < player1.characters[0].race.healthMax {
+                                currentTarget = player1.characters[0]
+                            } else {
+                                chooseTargetToHeal()
+                            }
+                        case "2" :
+                            if player1.characters[1].race.health > 0 && player1.characters[1].race.health < player1.characters[1].race.healthMax {
+                                currentTarget = player1.characters[1]
+                            } else {
+                                chooseTargetToHeal()
+                            }
+                        case "3" :
+                            if player1.characters[2].race.health > 0 && player1.characters[2].race.health < player1.characters[2].race.healthMax {
+                                currentTarget = player1.characters[2]
+                            } else {
+                                chooseTargetToHeal()
+                            }
+                        default: chooseTargetToHeal()
+                    }
+                } else {
+                    chooseTargetToHeal()
+                }
+            }
+        } else {
+            for index in 3...5 where characterArray[index].race.health > 0 && characterArray[index].race.health < characterArray[index].race.healthMax {
+                targetToHeal += 1
+                print("\(index-2) - \(characterArray[index].name) : \(characterArray[index].race.health) / \(characterArray[index].race.healthMax) PV")
+            }
+            if let choice = readLine(), !choice.isEmpty {
+                switch choice {
+                    case "1" :
+                        if player2.characters[0].race.health > 0 && player2.characters[0].race.health < player2.characters[0].race.healthMax {
+                            currentTarget = player2.characters[0]
+                        } else {
+                            chooseTargetToHeal()
+                        }
+                    case "2" :
+                        if player2.characters[1].race.health > 0 && player2.characters[1].race.health < player2.characters[1].race.healthMax {
+                            currentTarget = player2.characters[1]
+                        } else {
+                            chooseTargetToHeal()
+                        }
+                    case "3" :
+                        if player2.characters[2].race.health > 0 && player2.characters[2].race.health < player2.characters[2].race.healthMax {
+                            currentTarget = player2.characters[2]
+                        } else {
+                            chooseTargetToHeal()
+                        }
+                    default: chooseTargetToHeal()
+                }
+            } else {
+                chooseTargetToHeal()
+            }
+        }
     }
     
     private func doAction() {
@@ -219,8 +291,8 @@ class Game {
         }
         characterIsDead(character: currentTarget!)
         isGameOver()
-        if game.state == .isOver {
-            game.stats()
+        if state == .isOver {
+            stats()
         } else {
             currentC!.canPlay = false
             currentPIndex += 1
@@ -276,12 +348,12 @@ class Game {
     // set the game on isOver and a winner
     private func isGameOver() {
         if checkHealth(player1, 0) == 0 && checkHealth(player1, 1) == 0 && checkHealth(player1, 2) == 0 {
-            game.winner = player2
-            game.state = .isOver
+            winner = player2
+            state = .isOver
         }
         if checkHealth(player2, 0) == 0 && checkHealth(player2, 1) == 0 && checkHealth(player2, 2) == 0 {
-            game.state = .isOver
-            game.winner = player1
+            state = .isOver
+            winner = player1
         }
     }
 
@@ -308,7 +380,8 @@ class Game {
             characterPlayed += 1
         }
         if characterPlayed == 6 {
-            game.totalTurn += 1
+            totalTurn += 1
+            print("Turn n°\(totalTurn)")
             currentPIndex = 0
             for character in characterArray where character.race.health > 0 {
                 character.canPlay = true
