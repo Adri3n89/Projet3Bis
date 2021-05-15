@@ -11,4 +11,5 @@ let setup = Setup()
 setup.setupGame()
 let game = Game(player1: setup.player1, player2: setup.player2)
 game.start()
-print("restart?")
+setup.restart()
+

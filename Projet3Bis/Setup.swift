@@ -139,6 +139,20 @@ class Setup {
             chooseRace(name: name, player: player)
         }
     }
-
+    
+    func restart() {
+        print("restart?\n1 - YES\n2 - NO")
+        if let choice = readLine() {
+            switch choice {
+                case "1" :
+                    isPlayer2 = false
+                    setupGame()
+                case "2" : break
+                default : restart()
+            }
+        } else {
+            restart()
+        }
+    }
 
 }

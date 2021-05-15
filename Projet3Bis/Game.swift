@@ -93,7 +93,7 @@ class Game {
                 
             }
         }
-        if let choice = readLine(), !choice.isEmpty {
+        if let choice = readLine() {
             switch choice {
                 case "1" :
                     if player.characters[0].canPlay {
@@ -127,7 +127,7 @@ class Game {
         if currentC!.race.weapon.heal > 0 {
             print("2 - Heal :  + \(currentC!.race.weapon.heal) PV")
         }
-        if let choice = readLine(), !choice.isEmpty {
+        if let choice = readLine() {
             switch choice {
                 case "1" :
                     currentAction = "Attack"
@@ -141,6 +141,8 @@ class Game {
                 default:
                     chooseAttackOrHeal()
             }
+        } else {
+            chooseAttackOrHeal()
         }
     }
     
@@ -150,7 +152,7 @@ class Game {
             for index in 3...5 where characterArray[index].race.health > 0 {
                 print("\(index-2) - \(characterArray[index].name) : \(characterArray[index].race.health) PV")
             }
-            if let choice = readLine(), !choice.isEmpty {
+            if let choice = readLine() {
                 switch choice {
                     case "1" :
                         if player2.characters[0].race.health > 0 {
@@ -180,7 +182,7 @@ class Game {
             for index in 0...2 where characterArray[index].race.health > 0 {
                 print("\(index+1) - \(characterArray[index].name) : \(characterArray[index].race.health) PV")
             }
-            if let choice = readLine(), !choice.isEmpty {
+            if let choice = readLine() {
                 switch choice {
                     case "1" :
                         if player1.characters[0].race.health > 0 {
@@ -220,7 +222,7 @@ class Game {
                 print("no one to heal, go attack")
                 chooseAttackOrHeal()
             } else {
-                if let choice = readLine(), !choice.isEmpty {
+                if let choice = readLine() {
                     switch choice {
                         case "1" :
                             if player1.characters[0].race.health > 0 && player1.characters[0].race.health < player1.characters[0].race.healthMax {
@@ -251,7 +253,7 @@ class Game {
                 targetToHeal += 1
                 print("\(index-2) - \(characterArray[index].name) : \(characterArray[index].race.health) / \(characterArray[index].race.healthMax) PV")
             }
-            if let choice = readLine(), !choice.isEmpty {
+            if let choice = readLine() {
                 switch choice {
                     case "1" :
                         if player2.characters[0].race.health > 0 && player2.characters[0].race.health < player2.characters[0].race.healthMax {
