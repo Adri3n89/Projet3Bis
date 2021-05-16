@@ -19,7 +19,7 @@ class Game {
     let player2: Player
     let randomChest = RandomChest()
     let currentPArray : [Player]
-    let characterArray: [Character]
+    var characterArray: [Character]
     var currentPIndex = 0
     var currentC: Character?
     var currentP: Player

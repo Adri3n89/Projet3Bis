@@ -146,7 +146,16 @@ class Setup {
             switch choice {
                 case "1" :
                     isPlayer2 = false
+                    player1.name = ""
+                    player2.name = ""
+                    player1.characters.removeAll()
+                    player2.characters.removeAll()
+                    game.state = .isOngoing
+                    game.totalTurn = 1
+                    game.currentPIndex = 0
                     setupGame()
+                    game.characterArray = player1.characters + player2.characters
+                    game.start()
                 case "2" : break
                 default : restart()
             }
