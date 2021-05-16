@@ -8,24 +8,25 @@
 import Foundation
 
 class Race {
+    // MARK: - VARIABLES
     var weapon: Weapon
     var health: Int
     let healthMax: Int
     var type: Type
+    enum `Type`: String {
+        case elf
+        case human
+        case wizzard
+        case dwarf
+    }
 
+    // MARK: - INIT
     init(weapon: Weapon, health: Int, healthMax: Int, type: Type) {
         self.weapon = weapon
         self.health = health
         self.healthMax = healthMax
         self.type = type
     }
-}
-
-enum `Type`: String {
-    case elf
-    case human
-    case wizzard
-    case dwarf
 }
 
 class Human: Race {

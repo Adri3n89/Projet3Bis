@@ -8,10 +8,12 @@
 import Foundation
 
 class Setup {
+    // MARK: - VARIABLES
     var player1 = Player()
     var player2 = Player()
     var isPlayer2: Bool = false
-    
+
+    // MARK: - FUNCTIONS
     func setupGame() {
         createPlayer(player: player1)
         while player1.characters.count <= 2 {
@@ -23,28 +25,57 @@ class Setup {
             createCharacter(player: player2)
         }
     }
-    
+
+    func restart() {
+        print("restart?\n1 - YES\n2 - NO")
+        if let choice = readLine() {
+            switch choice {
+            case "1" :
+                isPlayer2 = false
+                player1.name = ""
+                player2.name = ""
+                player1.characters.removeAll()
+                player2.characters.removeAll()
+                game.state = .isOngoing
+                game.totalTurn = 1
+                game.currentPIndex = 0
+                setupGame()
+                game.characterArray = player1.characters + player2.characters
+                game.start()
+            case "2" : break
+            default : restart()
+            }
+        } else {
+            restart()
+        }
+    }
+
+    // MARK: - PRIVATES FUNCTIONS
     private func createPlayer(player: Player) {
         if isPlayer2 {
             print("Hello, choose a name for your player 2")
         } else {
             print("Hello, choose a name for your player 1")
         }
-        let name = readLine()
-        if name!.count < 3 {
-            print("your Player must have 3 letters in his name")
-            createPlayer(player: player)
-        } else {
-            player.name = name!
-            if isPlayer2 {
-                if player2.name.capitalized == player1.name.capitalized {
-                    print("You can't choose the same name that Player 1")
-                    createPlayer(player: player)
+        if let name = readLine(), !name.isEmpty {
+            if name.count < 3 {
+                print("your Player must have 3 letters in his name")
+                createPlayer(player: player)
+            } else {
+                player.name = name
+                if isPlayer2 {
+                    if player2.name.capitalized == player1.name.capitalized {
+                        print("You can't choose the same name that Player 1")
+                        createPlayer(player: player)
+                    }
                 }
             }
+        } else {
+            print("your Player must have 3 letters in his name")
+            createPlayer(player: player)
         }
     }
-    
+
     private func createCharacter(player: Player) {
         if player.characters.count == 0 {
             print("Choose a name for your first Character")
@@ -109,7 +140,7 @@ class Setup {
             chooseName(player: player)
         }
     }
-        
+
     private func chooseRace(name: String, player: Player) {
         let race: Race
         print("Choose a Race for your Character")
@@ -121,46 +152,22 @@ class Setup {
             """)
         if let raceChoice = readLine(), !raceChoice.isEmpty {
             switch raceChoice {
-                case "1" :
-                    race = Elf()
-                    player.characters.append(Character(name: name, race: race))
-                case "2" :
-                    race = Human()
-                    player.characters.append(Character(name: name, race: race))
-                case "3" :
-                    race = Wizzard()
-                    player.characters.append(Character(name: name, race: race))
-                case "4" :
+            case "1" :
+                race = Elf()
+                player.characters.append(Character(name: name, race: race))
+            case "2" :
+                race = Human()
+                player.characters.append(Character(name: name, race: race))
+            case "3" :
+                race = Wizzard()
+                player.characters.append(Character(name: name, race: race))
+            case "4" :
                     race = Dwarf()
                     player.characters.append(Character(name: name, race: race))
-                default : chooseRace(name: name, player: player)
+            default : chooseRace(name: name, player: player)
             }
         } else {
             chooseRace(name: name, player: player)
-        }
-    }
-    
-    func restart() {
-        print("restart?\n1 - YES\n2 - NO")
-        if let choice = readLine() {
-            switch choice {
-                case "1" :
-                    isPlayer2 = false
-                    player1.name = ""
-                    player2.name = ""
-                    player1.characters.removeAll()
-                    player2.characters.removeAll()
-                    game.state = .isOngoing
-                    game.totalTurn = 1
-                    game.currentPIndex = 0
-                    setupGame()
-                    game.characterArray = player1.characters + player2.characters
-                    game.start()
-                case "2" : break
-                default : restart()
-            }
-        } else {
-            restart()
         }
     }
 

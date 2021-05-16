@@ -12,4 +12,3 @@ setup.setupGame()
 var game = Game(player1: setup.player1, player2: setup.player2)
 game.start()
 setup.restart()
-
