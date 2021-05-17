@@ -16,10 +16,9 @@ class RandomChest {
 
     // MARK: - FUNCTIONS
     func chestAppear(currentC: Character) {
-        let randomNumber2: Int = .random(in: 0...3)
         let randomNumber: Int = .random(in: 0...2)
         let randomWeapon: Weapon?
-        if randomNumber2 == 2 {
+        if .random(in: 0...3) == 2 {
             switch currentC.race.type {
             case .elf : randomWeapon = arrayBow[randomNumber]
             case .dwarf : randomWeapon = arrayAxe[randomNumber]

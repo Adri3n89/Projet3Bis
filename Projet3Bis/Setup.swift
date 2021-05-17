@@ -42,7 +42,8 @@ class Setup {
                 setupGame()
                 game.characterArray = player1.characters + player2.characters
                 game.start()
-            case "2" : break
+            case "2" :
+                print("Have a nice day !")
             default : restart()
             }
         } else {
@@ -88,56 +89,52 @@ class Setup {
     }
 
     private func chooseName(player: Player) {
-        if let name = readLine(), !name.isEmpty {
-            var sameName = 0
-            if name.count < 3 {
-                print("your Character must have 3 letters in his name")
-                chooseName(player: player)
+           if let name = readLine(), !name.isEmpty {
+               if name.count < 3 {
+                   print("your Character must have 3 letters in his name")
+                   chooseName(player: player)
+               } else {
+                   validateCharactereName(name: name, player: player)
+               }
+           } else {
+               print("Your Character must have a name, please choose one")
+               chooseName(player: player)
+           }
+       }
+
+    private func validateCharactereName(name: String, player: Player) {
+        if player.characters.count == 0 {
+            if !isPlayer2 {
+                chooseRace(name: name, player: player)
             } else {
-                if player.characters.count == 0 {
-                    if !isPlayer2 {
-                        chooseRace(name: name, player: player)
-                    } else {
-                        for index in 0...player1.characters.count-1 where name.capitalized == player1.characters[index].name.capitalized {
-                            sameName += 1
-                        }
-                        if sameName > 0 {
-                            print("Your Character can't have the same name of a Player 1 character")
-                            sameName = 0
-                            chooseName(player: player)
-                        } else {
-                            chooseRace(name: name, player: player)
-                        }
-                    }
-                } else {
-                    for index in 0...player.characters.count-1 where name.capitalized == player.characters[index].name.capitalized {
-                        sameName += 1
-                    }
-                    if sameName > 0 {
-                        print("your Character can't have the same name of another Character")
-                        sameName = 0
-                        chooseName(player: player)
-                    } else {
-                        if isPlayer2 {
-                            for index in 0...player1.characters.count-1 where name.capitalized == player1.characters[index].name.capitalized {
-                                sameName += 1
-                            }
-                            if sameName > 0 {
-                                print("Your Character can't have the same name of a Player 1 character")
-                                sameName = 0
-                                chooseName(player: player)
-                            } else {
-                                chooseRace(name: name, player: player)
-                            }
-                        } else {
-                            chooseRace(name: name, player: player)
-                        }
-                    }
-                }
+                ifAlreadyExist(name: name, player: player)
             }
         } else {
-            print("Your Character must have a name, please choose one")
+            let isAlreadyExist = player.characters.filter { charactere in
+                return charactere.name.capitalized == name.capitalized
+            }
+            if isAlreadyExist.count == 0 {
+                print("your Character can't have the same name of another Character")
+                chooseName(player: player)
+            } else {
+                if isPlayer2 {
+                    ifAlreadyExist(name: name, player: player)
+                } else {
+                    chooseRace(name: name, player: player)
+                }
+            }
+        }
+    }
+
+    private func ifAlreadyExist(name: String, player: Player) {
+        let isAlreadyExist = player.characters.filter { charactere in
+            return charactere.name.capitalized == name.capitalized
+        }
+        if isAlreadyExist.count == 0 {
+            print("Your Character can't have the same name of a Player 1 character")
             chooseName(player: player)
+        } else {
+            chooseRace(name: name, player: player)
         }
     }
 
