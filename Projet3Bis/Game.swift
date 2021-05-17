@@ -16,36 +16,50 @@ class Game {
     var state: State = .isOngoing
     var totalTurn: Int = 1
     var winner: Player?
-    let player1: Player
-    let player2: Player
+    let player1 = Player()
+    let player2 = Player()
     let randomChest = RandomChest()
-    let currentPArray: [Player]
-    var characterArray: [Character]
+    var currentPArray: [Player] = []
+    var characterArray: [Character] = []
     var currentPIndex = 0
     var currentC: Character?
     var currentP: Player
     var currentTarget: Character?
     var currentAction: String = ""
     var currentOpponent: Player
-
-    // MARK: - INIT
-    init(player1: Player, player2: Player) {
-        self.player1 = player1
-        self.player2 = player2
-        self.currentP = player1
-        self.currentOpponent = player2
-        self.characterArray = player1.characters + player2.characters
-        self.currentPArray = [player1, player2]
+    var isPlayer2: Bool = false
+    
+    init() {
+        currentP = player1
+        currentOpponent = player2
     }
 
     // MARK: - FUNCTIONS
+    
+    func setupGame() {
+        createPlayer(player: player1)
+        while player1.characters.count <= 2 {
+            createCharacter(player: player1)
+        }
+        isPlayer2 = true
+        createPlayer(player: player2)
+        while player2.characters.count <= 2 {
+            createCharacter(player: player2)
+        }
+    }
+    
     func start() {
         print("Get ready to Fight!")
         print("Turn n°\(totalTurn)")
+        characterArray = player1.characters + player2.characters
+        currentPArray = [player1, player2]
         turn()
         }
+    
+    
+    // MARK: - PRIVATES FUNCTIONS
 
-    func stats() {
+    private func stats() {
         if let winner = winner {
             print("\(winner.name) Win the Fight in \(totalTurn) turns !")
             for character in winner.characters {
@@ -56,10 +70,127 @@ class Game {
                 }
             }
         }
-        setup.restart()
+    }
+    
+    private func restart() {
+        print("restart?\n1 - YES\n2 - NO")
+        if let choice = readLine() {
+            switch choice {
+            case "1" :
+                isPlayer2 = false
+                player1.name = ""
+                player2.name = ""
+                player1.characters.removeAll()
+                player2.characters.removeAll()
+                state = .isOngoing
+                totalTurn = 1
+                currentPIndex = 0
+                setupGame()
+                characterArray = player1.characters + player2.characters
+                start()
+            case "2" :
+                print("Have a nice day !")
+            default : restart()
+            }
+        } else {
+            restart()
+        }
+    }
+    
+    private func createPlayer(player: Player) {
+        if isPlayer2 {
+            print("Hello, choose a name for your player 2")
+        } else {
+            print("Hello, choose a name for your player 1")
+        }
+        if let name = readLine(), !name.isEmpty {
+            if name.count < 3 {
+                print("your Player must have 3 letters in his name")
+                createPlayer(player: player)
+            } else {
+                player.name = name
+                if isPlayer2 {
+                    if player2.name.capitalized == player1.name.capitalized {
+                        print("You can't choose the same name that Player 1")
+                        createPlayer(player: player)
+                    }
+                }
+            }
+        } else {
+            print("your Player must have 3 letters in his name")
+            createPlayer(player: player)
+        }
     }
 
-    // MARK: - PRIVATES FUNCTIONS
+    private func createCharacter(player: Player) {
+        if player.characters.count == 0 {
+            print("Choose a name for your first Character")
+        } else if player.characters.count == 1 {
+            print("Choose a name for your second Character")
+        } else {
+            print("Choose a name for your third Character")
+        }
+        chooseName(player: player)
+    }
+
+    private func chooseName(player: Player) {
+           if let name = readLine(), !name.isEmpty {
+               if name.count < 3 {
+                   print("your Character must have 3 letters in his name")
+                   chooseName(player: player)
+               } else {
+                   validateCharacterName(name: name, player: player)
+               }
+           } else {
+               print("Your Character must have a name, please choose one")
+               chooseName(player: player)
+           }
+       }
+
+    private func validateCharacterName(name: String, player: Player) {
+        let names = player1.characters.map { character in
+            return character.name.capitalized
+        } + player2.characters.map { character in
+            return character.name.capitalized
+        }
+        if names.contains(name.capitalized) {
+            print("Your Character can't have the same name of another Character")
+            chooseName(player: player)
+        } else {
+            chooseRace(name: name, player: player)
+        }
+    }
+
+    private func chooseRace(name: String, player: Player) {
+        let race: Race
+        print("Choose a Race for your Character")
+        print("""
+            1 - Elf
+            2 - Human
+            3 - Wizzard
+            4 - Dwarf
+            """)
+        if let raceChoice = readLine(), !raceChoice.isEmpty {
+            switch raceChoice {
+            case "1" :
+                race = Elf()
+                player.characters.append(Character(name: name, race: race))
+            case "2" :
+                race = Human()
+                player.characters.append(Character(name: name, race: race))
+            case "3" :
+                race = Wizzard()
+                player.characters.append(Character(name: name, race: race))
+            case "4" :
+                    race = Dwarf()
+                    player.characters.append(Character(name: name, race: race))
+            default : chooseRace(name: name, player: player)
+            }
+        } else {
+            chooseRace(name: name, player: player)
+        }
+    }
+
     private func chooseCurrentCharacter() {
         print("\(currentP.name) choose a character who can play")
         for index in 0...2 {
@@ -126,7 +257,7 @@ class Game {
         for index in 0...2 where showHealth(currentOpponent, index) > 0 {
             print("\(index+1) - \(currentOpponent.characters[index].name) : \(showHealth(currentOpponent, index)) / \(showHealthMax(currentOpponent, index)) PV")
         }
-        if let choice = readLine() {
+        if let choice = readLine() { // TODO Optimiser comme le heal
             switch choice {
             case "1" :
                 if showHealth(currentOpponent, 0) > 0 {
@@ -165,33 +296,23 @@ class Game {
             chooseAttackOrHeal()
         } else {
             if let choice = readLine() {
-                switch choice {
-                case "1" :
-                    if showHealth(currentP, 0) > 0 && showHealth(currentP, 0) < showHealthMax(currentP, 0) {
-                        currentTarget = currentP.characters[0]
-                    } else {
-                        chooseTargetToHeal()
-                    }
-                case "2" :
-                    if showHealth(currentP, 1) > 0 && showHealth(currentP, 1) < showHealthMax(currentP, 1) {
-                        currentTarget = currentP.characters[1]
-                    } else {
-                        chooseTargetToHeal()
-                    }
-                case "3" :
-                    if showHealth(currentP, 2) > 0 && showHealth(currentP, 2) < showHealthMax(currentP, 2) {
-                        currentTarget = currentP.characters[2]
-                    } else {
-                        chooseTargetToHeal()
-                    }
-                default: chooseTargetToHeal()
+                if let value = Int(choice), (value > 0 && value < 4) {
+                    heal(choice: value-1)
+                } else {
+                    chooseTargetToHeal()
                 }
-            } else {
-                chooseTargetToHeal()
             }
         }
     }
 
+    private func heal(choice: Int) {
+        if showHealth(currentP, choice) > 0 && showHealth(currentP, choice) < showHealthMax(currentP, choice) {
+            currentTarget = currentP.characters[choice]
+        } else {
+            chooseTargetToHeal()
+        }
+    }
+    
     private func doAction() {
         if let currentC = currentC {
             randomChest.chestAppear(currentC: currentC)
@@ -207,6 +328,7 @@ class Game {
             isGameOver()
             if state == .isOver {
                 stats()
+                restart()
             } else {
                 currentC.canPlay = false
                 currentPIndex += 1
@@ -237,10 +359,12 @@ class Game {
             if currentPArray.count == currentPIndex {
                 currentPIndex = 0
             }
+            turn()
+        } else {
+            chooseCurrentCharacter()
+            chooseAttackOrHeal()
+            doAction()
         }
-        chooseCurrentCharacter()
-        chooseAttackOrHeal()
-        doAction()
     }
 
     private func characterIsDead(character: Character) {
