@@ -8,6 +8,7 @@
 import Foundation
 
 class Player {
+    // MARK: - VARIABLES
     var name = ""
     var characters = [Character]()
 }

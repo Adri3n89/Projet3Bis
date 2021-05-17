@@ -12,7 +12,6 @@
 		7A21D306264D2602008D4B23 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A21D305264D2602008D4B23 /* Player.swift */; };
 		7A21D308264D2610008D4B23 /* Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A21D307264D2610008D4B23 /* Character.swift */; };
 		7A21D30A264D2621008D4B23 /* Weapon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A21D309264D2621008D4B23 /* Weapon.swift */; };
-		7A21D30C264D26E0008D4B23 /* FightManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A21D30B264D26E0008D4B23 /* FightManager.swift */; };
 		7A21D30E264D26F3008D4B23 /* Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A21D30D264D26F3008D4B23 /* Setup.swift */; };
 		7A21D310264D27B6008D4B23 /* RandomChest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A21D30F264D27B6008D4B23 /* RandomChest.swift */; };
 		7A21D312264D284B008D4B23 /* Race.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A21D311264D284B008D4B23 /* Race.swift */; };
@@ -37,7 +36,6 @@
 		7A21D305264D2602008D4B23 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		7A21D307264D2610008D4B23 /* Character.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Character.swift; sourceTree = "<group>"; };
 		7A21D309264D2621008D4B23 /* Weapon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weapon.swift; sourceTree = "<group>"; };
-		7A21D30B264D26E0008D4B23 /* FightManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FightManager.swift; sourceTree = "<group>"; };
 		7A21D30D264D26F3008D4B23 /* Setup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setup.swift; sourceTree = "<group>"; };
 		7A21D30F264D27B6008D4B23 /* RandomChest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomChest.swift; sourceTree = "<group>"; };
 		7A21D311264D284B008D4B23 /* Race.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Race.swift; sourceTree = "<group>"; };
@@ -74,14 +72,13 @@
 			isa = PBXGroup;
 			children = (
 				7A21D2FC264D25C1008D4B23 /* main.swift */,
+				7A21D30D264D26F3008D4B23 /* Setup.swift */,
 				7A21D303264D25F2008D4B23 /* Game.swift */,
 				7A21D305264D2602008D4B23 /* Player.swift */,
 				7A21D307264D2610008D4B23 /* Character.swift */,
-				7A21D309264D2621008D4B23 /* Weapon.swift */,
-				7A21D30B264D26E0008D4B23 /* FightManager.swift */,
-				7A21D30D264D26F3008D4B23 /* Setup.swift */,
-				7A21D30F264D27B6008D4B23 /* RandomChest.swift */,
 				7A21D311264D284B008D4B23 /* Race.swift */,
+				7A21D309264D2621008D4B23 /* Weapon.swift */,
+				7A21D30F264D27B6008D4B23 /* RandomChest.swift */,
 			);
 			path = Projet3Bis;
 			sourceTree = "<group>";
@@ -96,6 +93,7 @@
 				7A21D2F5264D25C1008D4B23 /* Sources */,
 				7A21D2F6264D25C1008D4B23 /* Frameworks */,
 				7A21D2F7264D25C1008D4B23 /* CopyFiles */,
+				7A54367426517C1A00E95D67 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -138,12 +136,31 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		7A54367426517C1A00E95D67 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		7A21D2F5264D25C1008D4B23 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A21D30C264D26E0008D4B23 /* FightManager.swift in Sources */,
 				7A21D30A264D2621008D4B23 /* Weapon.swift in Sources */,
 				7A21D2FD264D25C1008D4B23 /* main.swift in Sources */,
 				7A21D306264D2602008D4B23 /* Player.swift in Sources */,

@@ -7,5 +7,7 @@
 
 import Foundation
 
-print("Hello, World!")
-
+let setup = Setup()
+setup.setupGame()
+var game = Game(player1: setup.player1, player2: setup.player2)
+game.start()
