@@ -52,45 +52,6 @@ class Game {
 
     // MARK: - PRIVATES FUNCTIONS
 
-    // show the details of the game
-    private func stats() {
-        if let winner = winner {
-            print("\(winner.name) Win the Fight in \(totalTurn) turns !")
-            for character in winner.characters {
-                if character.race.health == 0 {
-                    print("\(character.name) the \(character.race.type) is dead")
-                } else {
-                    print("\(character.name) the \(character.race.type) have \(character.race.health) PV left.")
-                }
-            }
-        }
-    }
-
-    // ask the user if he want to launch another game of not
-    private func restart() {
-        print("restart?\n1 - YES\n2 - NO")
-        if let choice = readLine() {
-            switch choice {
-            case "1" :
-                isPlayer2 = false
-                player1.name = ""
-                player2.name = ""
-                player1.characters.removeAll()
-                player2.characters.removeAll()
-                gameOn = true
-                totalTurn = 1
-                setupGame()
-                characterArray = player1.characters + player2.characters
-                start()
-            case "2" :
-                print("Have a nice day !")
-            default : restart()
-            }
-        } else {
-            restart()
-        }
-    }
-
     // set the name a your player
     private func createPlayer(player: Player) {
         if isPlayer2 {
@@ -183,6 +144,19 @@ class Game {
             }
         } else {
             chooseRace(name: name, player: player)
+        }
+    }
+
+    // a player turn, choose a character, an action, and do the action
+    private func turn() {
+        currentOpponent = (currentPlayer.name == player1.name ? player2 : player1)
+        if !currentPlayer.characters[0].canPlay && !currentPlayer.characters[1].canPlay && !currentPlayer.characters[2].canPlay {
+            currentPlayer = (currentPlayer.name == player1.name ? player2 : player1)
+            turn()
+        } else {
+            chooseCurrentCharacter()
+            chooseAttackOrHeal()
+            doAction()
         }
     }
 
@@ -319,19 +293,6 @@ class Game {
         }
     }
 
-    // a player turn, choose a character, an action, and do the action
-    private func turn() {
-        currentOpponent = (currentPlayer.name == player1.name ? player2 : player1)
-        if !currentPlayer.characters[0].canPlay && !currentPlayer.characters[1].canPlay && !currentPlayer.characters[2].canPlay {
-            currentPlayer = (currentPlayer.name == player1.name ? player2 : player1)
-            turn()
-        } else {
-            chooseCurrentCharacter()
-            chooseAttackOrHeal()
-            doAction()
-        }
-    }
-
     // check health to put a death character canPlay to false
     private func characterIsDead(character: Character) {
         if character.race.health == 0 {
@@ -398,4 +359,45 @@ class Game {
     private func showHealthMax(_ player: Player, _ index: Int) -> Int {
         return player.characters[index].race.healthMax
     }
+
+    // show the details of the game
+    private func stats() {
+        if let winner = winner {
+            print("\(winner.name) Win the Fight in \(totalTurn) turns !")
+            for character in winner.characters {
+                if character.race.health == 0 {
+                    print("\(character.name) the \(character.race.type) is dead")
+                } else {
+                    print("\(character.name) the \(character.race.type) have \(character.race.health) PV left.")
+                }
+            }
+        }
+    }
+
+    // ask the user if he want to launch another game of not
+    private func restart() {
+        print("restart?\n1 - YES\n2 - NO")
+        if let choice = readLine() {
+            switch choice {
+            case "1" :
+                isPlayer2 = false
+                player1.name = ""
+                player2.name = ""
+                player1.characters.removeAll()
+                player2.characters.removeAll()
+                gameOn = true
+                totalTurn = 1
+                setupGame()
+                start()
+            case "2" :
+                print("Have a nice day !")
+            default : restart()
+            }
+        } else {
+            restart()
+        }
+    }
+
 }
+
+

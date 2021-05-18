@@ -7,6 +7,6 @@
 
 import Foundation
 
-var game = Game()
+private var game = Game()
 game.setupGame()
 game.start()
